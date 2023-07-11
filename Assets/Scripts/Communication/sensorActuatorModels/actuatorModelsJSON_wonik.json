@@ -1,0 +1,99 @@
+{
+  "sensorActuators":[
+   {
+      "id":"SA",
+      "name":"SA",
+      "type":"SA",
+      "targetObjectId":"SA",
+      "messageFormat":"JSON",
+      "ip": "192.168.92.1",
+      "port": "20808",
+      "actionProtocols" : [
+	    {
+	        "protocolId" : "requestOpenDoor",
+	        "protocolType": "result",
+	        "requestMessageTemplate" : {
+	                "id" : "$doorID",
+	                "mType" : "openDoor"
+	        },
+	        "actionList" : [
+	                "openDoor($doorID)"
+	        ],
+	        "resultMessageTemplete" : {
+	                "id" : "$doorID",
+	                "mType" : "responseOpenDoor",
+	                "result" : "$result"
+	        }
+	    },
+	    {
+	        "protocolId" : "requestCloseDoor",
+	        "protocolType": "result",
+	        "requestMessageTemplate" : {
+	                "id" : "$doorID",
+	                "mType" : "closeDoor"
+	        },
+	        "actionList" : [
+	                "closeDoor($doorID)"
+	        ],
+	        "resultMessageTemplete" : {
+	                "id" : "$doorID",
+	                "mType" : "responseCloseDoor",
+	                "result" : "$result"
+	        }
+	    },
+	    {
+	        "protocolId" : "requestOpenElevatorDoor",
+	        "protocolType": "result",
+	        "requestMessageTemplate" : {
+	                "id" : "$elevatorID",
+	                "mType" : "openElevatorDoor",
+	                "floor" : "$floor"
+	        },
+	        "actionList" : [
+	                "openElevatorDoor($elevatorID, $floor)"
+	        ],
+	        "resultMessageTemplete" : {
+	                "id" : "$elevatorID",
+	                "mType" : "elevatorState",
+	                "result" : "$result"
+	        }
+	    },
+	    {
+	        "protocolId" : "requestCloseElevatorDoor",
+	        "protocolType": "result",
+	        "requestMessageTemplate" : {
+	                "id" : "$elevatorID",
+	                "mType" : "closeElevatorDoor",
+	                "floor" : "$floor"
+	        },
+	        "actionList" : [
+	                "closeElevatorDoor($elevatorID, $floor)"
+	        ],
+	        "resultMessageTemplete" : {
+	                "id" : "$elevatorID",
+	                "mType" : "elevatorState",
+	                "result" : "$result"
+	        }
+	    },
+	    {
+	        "protocolId" : "requestMoveElevator",
+	        "protocolType": "result",
+	        "requestMessageTemplate" : {
+	                "id" : "$elevatorID",
+	                "mType" : "moveElevator",
+	                "floor" : "$floor"
+	        },
+	        "actionList" : [
+	                "moveElevator($elevatorID, $floor)"
+	        ],
+	        "resultMessageTemplete" : {
+	                "id" : "$elevatorID",
+	                "mType" : "arrivedElevator",
+	                "result" : "$result"
+	        }
+	    } 
+      ],
+	"sensingProtocols":[]
+    }
+  ]
+}
