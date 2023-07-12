@@ -1,6 +1,7 @@
 # 3D-Unity-RobotSimulator
 
 
-## install from assets store
+## install from unity Asset store
 
-### Brick Project Studio
+### Apartment Kit - Brick Project Studio
+
