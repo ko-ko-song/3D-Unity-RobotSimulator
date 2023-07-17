@@ -1243,13 +1243,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wheel1: {fileID: 1758286414005427567}
   wheel2: {fileID: 278062184462190384}
-  mode: 1
+  mode: 0
   maxLinearSpeed: 0.8
   maxRotationalSpeed: 0.5
   wheelRadius: 0.033
   trackWidth: 0.288
-  forceLimit: 10
-  damping: 10
+  forceLimit: 1000
+  damping: 100
   ROSTimeout: 0.5
 --- !u!1 &5764123873672047803
 GameObject:

@@ -18,12 +18,20 @@ namespace RosSharp.Control
         private ArticulationBody r_l_wA;
         private ArticulationBody r_r_wA;
 
-        public float maxLinearSpeed = 2; //  m/s
-        public float maxRotationalSpeed = 1;//
-        public float wheelRadius = 0.033f; //meters
-        public float trackWidth = 0.288f; // meters Distance between tyres
-        public float forceLimit = 10;
-        public float damping = 10;
+        public float maxLinearSpeed = 1f; //  m/s
+        public float maxRotationalSpeed = 2f;//
+        public float wheelRadius = 0.1651f; //meters
+        public float trackWidth = 0.5708f; // meters Distance between tyres
+        public float forceLimit = 10000000;
+        public float damping = 10000;
+
+        public float stiffness = 10;
+        
+        //실제 로봇과의 회전 속도를 맞추기 위해 TrackWidth에 곱하는 값 
+        //허스키의 경우 2정도 default = 1;
+        public float wheelSeparationMultiplier = 1;
+        
+        private float calibratedTrackWidth;
 
         public float ROSTimeout = 0.5f;
         private float lastCmdReceived = 0f;
@@ -35,6 +43,8 @@ namespace RosSharp.Control
 
         void Start()
         {
+            calibratedTrackWidth = trackWidth * wheelSeparationMultiplier;
+
             f_l_wA = front_left_wheel.GetComponent<ArticulationBody>();
             f_r_wA = front_right_wheel.GetComponent<ArticulationBody>();
             r_l_wA = rear_left_wheel.GetComponent<ArticulationBody>();
@@ -72,6 +82,7 @@ namespace RosSharp.Control
             ArticulationDrive drive = joint.xDrive;
             drive.forceLimit = forceLimit;
             drive.damping = damping;
+            drive.stiffness = stiffness;
             joint.xDrive = drive;
         }
 
@@ -136,43 +147,6 @@ namespace RosSharp.Control
 
         private void RobotInput(float linearVelocity, float angularVelocity) // m/s and rad/s
         {
-            //if (speed > maxLinearSpeed)
-            //{
-            //    speed = maxLinearSpeed;
-            //}
-            //if (rotSpeed > maxRotationalSpeed)
-            //{
-            //    rotSpeed = maxRotationalSpeed;
-            //}
-            //float front_left_wheel_Rotation = (speed / wheelRadius);
-            //float front_right_wheel_Rotation = front_left_wheel_Rotation;
-            //float rear_left_wheel_Rotation = front_left_wheel_Rotation;
-            //float rear_right_wheel_Rotation = front_left_wheel_Rotation;
-
-
-            //float wheelSpeedDiff = ((rotSpeed * trackWidth) / wheelRadius);
-            //if (rotSpeed != 0)
-            //{
-            //    //front_left_wheel_Rotation = (front_left_wheel_Rotation + (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-            //    //front_right_wheel_Rotation = (front_right_wheel_Rotation - (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-            //    //rear_left_wheel_Rotation = (rear_left_wheel_Rotation + (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-            //    //rear_right_wheel_Rotation = (rear_right_wheel_Rotation - (wheelSpeedDiff / 1)) * Mathf.Rad2Deg;
-            //}
-            //else
-            //{
-            //    //front_left_wheel_Rotation *= Mathf.Rad2Deg;
-            //    //front_right_wheel_Rotation *= Mathf.Rad2Deg;
-            //    //rear_left_wheel_Rotation *= Mathf.Rad2Deg;
-            //    //rear_right_wheel_Rotation *= Mathf.Rad2Deg;
-            //}
-
-            //SetSpeed(f_l_wA, front_left_wheel_Rotation);
-            //SetSpeed(f_r_wA, front_right_wheel_Rotation);
-            //SetSpeed(r_l_wA, rear_left_wheel_Rotation);
-            //SetSpeed(r_r_wA, rear_right_wheel_Rotation);
-
-            //Debug.Log("linearVelocity  : " + linearVelocity);
-            //Debug.Log("angularVelocity  : " + angularVelocity);
 
             if (linearVelocity > maxLinearSpeed)
             {
@@ -183,8 +157,8 @@ namespace RosSharp.Control
                 angularVelocity = maxRotationalSpeed;
             }
 
-            float rightWheelSpeed = (linearVelocity - angularVelocity * trackWidth / 2) / wheelRadius;
-            float leftWheelSpeed = (linearVelocity + angularVelocity * trackWidth / 2) / wheelRadius;
+            float rightWheelSpeed = (linearVelocity - angularVelocity * calibratedTrackWidth / 2) / wheelRadius;
+            float leftWheelSpeed = (linearVelocity + angularVelocity * calibratedTrackWidth / 2) / wheelRadius;
 
             float rightWheelSpeedDeg = rightWheelSpeed * Mathf.Rad2Deg;
             float leftWheelRotationDeg = leftWheelSpeed * Mathf.Rad2Deg;

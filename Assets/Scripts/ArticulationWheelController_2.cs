@@ -49,6 +49,7 @@ public class ArticulationWheelController_2 : MonoBehaviour
 
     void Start() 
     {
+        
         left_wheel_ab = left_wheel.GetComponent<ArticulationBody>();
         right_wheel_ab = right_wheel.GetComponent<ArticulationBody>();
         SetParameters(left_wheel_ab);
