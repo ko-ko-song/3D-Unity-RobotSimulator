@@ -7,13 +7,15 @@ using RosMessageTypes.Tf2;
 using Unity.Robotics.Core;
 using Unity.Robotics.ROSTCPConnector;
 using Unity.Robotics.ROSTCPConnector.ROSGeometry;
-using Unity.Robotics.SlamExample;
+// using Unity.Robotics.SlamExample;
 using UnityEngine;
 
 
     public class ROSTransformTreePublisher : MonoBehaviour
     {
-        const string k_TfTopic = "/tf";
+        public string tf_prefix ="";
+
+        private string k_TfTopic = "/tf";
 
         [SerializeField]
         double m_PublishRateHz = 20f;
@@ -42,22 +44,23 @@ using UnityEngine;
             }
 
             m_ROS = ROSConnection.GetOrCreateInstance();
-            m_TransformRoot = new TransformTreeNode(m_RootGameObject);
+            m_TransformRoot = new TransformTreeNode(m_RootGameObject, tf_prefix);
             m_ROS.RegisterPublisher<TFMessageMsg>(k_TfTopic);
             m_LastPublishTimeSeconds = Clock.time + PublishPeriodSeconds;
         }
 
-        static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTreeNode tfNode)
+        static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTreeNode tfNode, String tf_prefix)
         {
             // TODO: Some of this could be done once and cached rather than doing from scratch every time
             // Only generate transform messages from the children, because This node will be parented to the global frame
             foreach (var childTf in tfNode.Children)
             {
-                tfList.Add(TransformTreeNode.ToTransformStamped(childTf));
+                
+                tfList.Add(TransformTreeNode.ToTransformStamped(childTf, tf_prefix));
 
                 if (!childTf.IsALeafNode)
                 {
-                    PopulateTFList(tfList, childTf);
+                    PopulateTFList(tfList, childTf, tf_prefix);
                 }
             }
         }
@@ -71,8 +74,9 @@ using UnityEngine;
                 TransformMsg tm = m_TransformRoot.Transform.To<FLU>();
                 tm.translation.z = 0;
                 var tfRootToGlobal = new TransformStampedMsg(
-                    new HeaderMsg((uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), m_GlobalFrameIds.Last()),
-                    m_TransformRoot.name,
+                    new HeaderMsg((uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), 
+                    tf_prefix + m_GlobalFrameIds.Last()),
+                    tf_prefix + m_TransformRoot.name,
                     tm);
                 tfMessageList.Add(tfRootToGlobal);
             }
@@ -93,7 +97,7 @@ using UnityEngine;
                 tfMessageList.Add(tfGlobalToGlobal);
             }
 
-            PopulateTFList(tfMessageList, m_TransformRoot);
+            PopulateTFList(tfMessageList, m_TransformRoot, tf_prefix);
 
             var tfMessage = new TFMessageMsg(tfMessageList.ToArray());
             m_ROS.Publish(k_TfTopic, tfMessage);

@@ -24,6 +24,8 @@ public class LaserScanSensor : MonoBehaviour
     public string LayerMaskName = "TurtleBot3Manual";
     public string FrameId = "base_scan";
 
+    public string tf_prefix = "";
+
     float m_CurrentScanAngleStart;
     float m_CurrentScanAngleEnd;
     ROSConnection m_Ros;
@@ -36,6 +38,9 @@ public class LaserScanSensor : MonoBehaviour
 
     protected virtual void Start()
     {
+        FrameId = tf_prefix + FrameId;
+        topic = tf_prefix + topic;
+
         m_Ros = ROSConnection.GetOrCreateInstance();
         m_Ros.RegisterPublisher<LaserScanMsg>(topic);
 
