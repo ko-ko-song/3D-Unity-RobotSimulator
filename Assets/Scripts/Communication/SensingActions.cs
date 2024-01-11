@@ -83,7 +83,7 @@ public class SensingActions : MonoBehaviour
 
         if (elevator == null)
         {
-            Debug.Log("ÇØ´ç idÀÇ elevator doorÀ» Ã£À» ¼ö ¾øÀ½");
+            Debug.Log("ï¿½Ø´ï¿½ idï¿½ï¿½ elevator doorï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             return;
         }
         
@@ -170,7 +170,7 @@ public class SensingActions : MonoBehaviour
 
         if (elevator == null)
         {
-            Debug.Log("ÇØ´ç idÀÇ elevator doorÀ» Ã£À» ¼ö ¾øÀ½");
+            Debug.Log("ï¿½Ø´ï¿½ idï¿½ï¿½ elevator doorï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             return;
         }
 
@@ -271,7 +271,7 @@ public class SensingActions : MonoBehaviour
             yield break;
         }
         
-        float goalHeight = (float.Parse(floor) - 1) * distanceBetweenFloors;
+        float goalHeight = (float.Parse(floor)) * distanceBetweenFloors;
         Vector3 targetPosition = new Vector3(elevator.transform.position.x, goalHeight, elevator.transform.position.z);
 
         if (Mathf.Abs(elevator.transform.position.y - goalHeight) < 0.1f)
@@ -345,7 +345,7 @@ public class SensingActions : MonoBehaviour
 
         if (door == null)
         {
-            Debug.Log("ÇØ´ç idÀÇ doorÀ» Ã£À» ¼ö ¾øÀ½");
+            Debug.Log("ï¿½Ø´ï¿½ idï¿½ï¿½ doorï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             return;
         }
 
@@ -429,7 +429,7 @@ public class SensingActions : MonoBehaviour
 
         if (door == null)
         {
-            Debug.Log("ÇØ´ç idÀÇ elevator doorÀ» Ã£À» ¼ö ¾øÀ½");
+            Debug.Log("ï¿½Ø´ï¿½ idï¿½ï¿½ elevator doorï¿½ï¿½ Ã£ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             return;
         }
         

@@ -16,6 +16,8 @@ using UnityEngine;
         public string tf_prefix ="";
 
         private string k_TfTopic = "/tf";
+	//private string multi_tfTopic = "";
+
 
         [SerializeField]
         double m_PublishRateHz = 20f;
@@ -45,6 +47,11 @@ using UnityEngine;
 
             m_ROS = ROSConnection.GetOrCreateInstance();
             m_TransformRoot = new TransformTreeNode(m_RootGameObject, tf_prefix);
+		
+	    //if (tf_prefix != ""){
+	    //	k_TfTopic = "/"+tf_prefix + "tf";
+	    //}
+
             m_ROS.RegisterPublisher<TFMessageMsg>(k_TfTopic);
             m_LastPublishTimeSeconds = Clock.time + PublishPeriodSeconds;
         }
