@@ -39,7 +39,7 @@ public class LaserScanPublisher : MonoBehaviour
         float[] intensities = new float[laser.ranges.Length];
         laserScan = new LaserScanMsg
         {
-            header = new HeaderMsg((uint)Math.Floor(Clock.time), 
+            header = new HeaderMsg(
                                    new TimeStamp(Clock.time), laserLinkId),
             angle_min       = laser.angleMin,
             angle_max       = laser.angleMax,
@@ -62,7 +62,7 @@ public class LaserScanPublisher : MonoBehaviour
     private void PublishScan()
     {   
         laserScan.header = new HeaderMsg(
-           (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), laserLinkId
+           new TimeStamp(Clock.time), laserLinkId
         );
         laserScan.ranges = laser.ranges;
 

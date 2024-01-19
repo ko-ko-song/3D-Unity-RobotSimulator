@@ -36,7 +36,7 @@ public class PoseStampedPublisher : MonoBehaviour
         poseStamped = new PoseStampedMsg
         {
             header = new HeaderMsg(
-               (uint)Mathf.Floor((float)Clock.time), new TimeStamp(Clock.time), frameID
+               new TimeStamp(Clock.time), frameID
             )
         };
 
@@ -46,7 +46,7 @@ public class PoseStampedPublisher : MonoBehaviour
     private void PublishPoseStamped()
     {
         poseStamped.header = new HeaderMsg(
-            (uint)Mathf.Floor((float)Clock.time), new TimeStamp(Clock.time), frameID
+            new TimeStamp(Clock.time), frameID
         );
 
         poseStamped.pose.position = publishedTransform.position.To<FLU>();

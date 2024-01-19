@@ -50,7 +50,7 @@ public class ImagePublisher : MonoBehaviour
         // Initialize messages
         compressedImage = new CompressedImageMsg();
         compressedImage.header = new HeaderMsg(
-            (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), frameId
+            new TimeStamp(Clock.time), frameId
         );
         compressedImage.format = "jpeg";
 
@@ -63,7 +63,7 @@ public class ImagePublisher : MonoBehaviour
         if (texture2D != null && cameraObject == imageCamera)
         {
             compressedImage.header = new HeaderMsg(
-                (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), frameId
+                new TimeStamp(Clock.time), frameId
             );
             texture2D.ReadPixels(rect, 0, 0);
             compressedImage.data = texture2D.EncodeToJPG(qualityLevel);

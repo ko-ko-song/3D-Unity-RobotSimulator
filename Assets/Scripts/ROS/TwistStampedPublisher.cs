@@ -47,7 +47,7 @@ public class TwistStampedPublisher : MonoBehaviour
         twistStamped = new TwistStampedMsg
         {
             header = new HeaderMsg(
-                (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), frameId
+                new TimeStamp(Clock.time), frameId
             )
         };
 
@@ -58,7 +58,7 @@ public class TwistStampedPublisher : MonoBehaviour
     private void PublishTwistStamped()
     {
         twistStamped.header = new HeaderMsg(
-            (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), frameId
+            new TimeStamp(Clock.time), frameId
         );
 
         // Linear

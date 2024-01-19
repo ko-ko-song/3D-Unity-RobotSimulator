@@ -30,7 +30,7 @@ public static class TransformExtensions
     {
         return new TransformStampedMsg(
             new HeaderMsg(
-                (uint)Math.Floor(Clock.time), 
+                
                 new TimeStamp(timeStamp),
                 tf_prefix + tfUnity.parent.gameObject.name
             ),

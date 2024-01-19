@@ -65,7 +65,7 @@ public class JointStatePublisher : MonoBehaviour
         jointState = new JointStateMsg
         {
             header = new HeaderMsg(
-                (uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), frameId
+               new TimeStamp(Clock.time), frameId
             ),
             name = names,
             position = new double[jointStateLength],
@@ -91,7 +91,7 @@ public class JointStatePublisher : MonoBehaviour
         }
 
         // Update ROS message
-        jointState.header = new HeaderMsg((uint)Math.Floor(Clock.time), 
+        jointState.header = new HeaderMsg(
                                           new TimeStamp(Clock.time), frameId);
         jointState.position = Array.ConvertAll(positions, x => (double)x);
         jointState.velocity = Array.ConvertAll(velocities, x => (double)x);

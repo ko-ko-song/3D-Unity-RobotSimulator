@@ -15,7 +15,7 @@ using UnityEngine;
     {
         public string tf_prefix ="";
 
-        private string k_TfTopic = "/tf";
+        public string k_TfTopic = "robot1/tf";
 	//private string multi_tfTopic = "";
 
 
@@ -48,9 +48,9 @@ using UnityEngine;
             m_ROS = ROSConnection.GetOrCreateInstance();
             m_TransformRoot = new TransformTreeNode(m_RootGameObject, tf_prefix);
 		
-	    //if (tf_prefix != ""){
-	    //	k_TfTopic = "/"+tf_prefix + "tf";
-	    //}
+	    if (tf_prefix != ""){
+	    	k_TfTopic = "/"+tf_prefix + "tf";
+	    }
 
             m_ROS.RegisterPublisher<TFMessageMsg>(k_TfTopic);
             m_LastPublishTimeSeconds = Clock.time + PublishPeriodSeconds;
@@ -81,7 +81,7 @@ using UnityEngine;
                 TransformMsg tm = m_TransformRoot.Transform.To<FLU>();
                 tm.translation.z = 0;
                 var tfRootToGlobal = new TransformStampedMsg(
-                    new HeaderMsg((uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), 
+                    new HeaderMsg(new TimeStamp(Clock.time), 
                     tf_prefix + m_GlobalFrameIds.Last()),
                     tf_prefix + m_TransformRoot.name,
                     tm);
@@ -97,7 +97,7 @@ using UnityEngine;
             for (var i = 1; i < m_GlobalFrameIds.Count; ++i)
             {
                 var tfGlobalToGlobal = new TransformStampedMsg(
-                    new HeaderMsg((uint)Math.Floor(Clock.time), new TimeStamp(Clock.time), m_GlobalFrameIds[i - 1]),
+                    new HeaderMsg(new TimeStamp(Clock.time), m_GlobalFrameIds[i - 1]),
                     m_GlobalFrameIds[i],
                     // Initializes to identity transform
                     new TransformMsg());
