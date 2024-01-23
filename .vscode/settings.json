@@ -52,5 +52,6 @@
         "temp/":true,
         "Temp/":true
     },
-    "FSharp.suggestGitignore": false
+    "FSharp.suggestGitignore": false,
+    "dotnet.preferCSharpExtension": true
 }
