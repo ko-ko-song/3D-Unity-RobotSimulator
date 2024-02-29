@@ -27,6 +27,7 @@ public class StateReader : MonoBehaviour
     public float[] velocities;
     public float[] forces;
 
+    public float drivingVelocity;
     void Start()
     {
         deltaTime = 1f/updateRate;
@@ -66,6 +67,7 @@ public class StateReader : MonoBehaviour
         angularVelocity = tf.InverseTransformDirection(angularVelocity);
         angularVelocity = new Vector3(Mathf.Round(angularVelocity.x), Mathf.Round(angularVelocity.y), Mathf.Round(angularVelocity.z));
 
+        drivingVelocity = Mathf.Abs(linearVelocity.magnitude);
         // Position and orientation
         position = tf.position;
         rotation = tf.rotation;
