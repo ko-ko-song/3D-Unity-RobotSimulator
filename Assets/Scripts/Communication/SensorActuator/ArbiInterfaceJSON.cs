@@ -52,13 +52,17 @@ public class ArbiInterfaceJSON
     {
         foreach (TcpClient n in clients.ToArray())
         {
-            if (!n.Connected)
+            try{
+                ns = n.GetStream();
+                sw = new StreamWriter(ns);
+                //Debug.Log(JSONString);
+                sw.WriteLine(JSONString);
+                sw.Flush();
+            }catch{
+                clients.Remove(n);
+                n.Close();
                 continue;
-            ns = n.GetStream();
-            sw = new StreamWriter(ns);
-            //Debug.Log(JSONString);
-            sw.WriteLine(JSONString);
-            sw.Flush();
+            }
         }
     }
     
