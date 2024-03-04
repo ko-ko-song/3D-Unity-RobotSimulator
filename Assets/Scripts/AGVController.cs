@@ -12,6 +12,7 @@ namespace RosSharp.Control
         public GameObject wheel1;
         public GameObject wheel2;
         public ControlMode mode = ControlMode.ROS;
+        public string topicName = "cmd_vel";
 
         private ArticulationBody wA1;
         private ArticulationBody wA2;
@@ -38,7 +39,7 @@ namespace RosSharp.Control
             SetParameters(wA1);
             SetParameters(wA2);
             ros = ROSConnection.GetOrCreateInstance();
-            ros.Subscribe<TwistMsg>("cmd_vel", ReceiveROSCmd);
+            ros.Subscribe<TwistMsg>(topicName, ReceiveROSCmd);
         }
 
         void ReceiveROSCmd(TwistMsg cmdVel)
