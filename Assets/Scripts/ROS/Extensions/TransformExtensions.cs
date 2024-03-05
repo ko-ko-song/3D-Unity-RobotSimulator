@@ -26,15 +26,15 @@ public static class TransformExtensions
     }
 
     public static TransformStampedMsg ToROSTransformStamped(
-        this Transform tfUnity, double timeStamp, string tf_prefix)
+        this Transform tfUnity, double timeStamp)
     {
         return new TransformStampedMsg(
             new HeaderMsg(
                 
                 new TimeStamp(timeStamp),
-                tf_prefix + tfUnity.parent.gameObject.name
+             tfUnity.parent.gameObject.name
             ),
-            tf_prefix + tfUnity.gameObject.name,
+            tfUnity.gameObject.name,
             tfUnity.ToROSTransform());
     }
 }

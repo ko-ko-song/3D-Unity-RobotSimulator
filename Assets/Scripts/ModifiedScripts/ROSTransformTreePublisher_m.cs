@@ -11,13 +11,13 @@ using Unity.Robotics.ROSTCPConnector.ROSGeometry;
 using UnityEngine;
 
 
-    public class ROSTransformTreePublisher : MonoBehaviour
+    public class ROSTransformTreePublisher_m : MonoBehaviour
     {
-        public string tf_prefix ="";
+        // public string tf_prefix ="";
 
         public string k_TfTopic = "robot1/tf";
-	//private string multi_tfTopic = "";
-
+	    //private string multi_tfTopic = "";
+        
 
         [SerializeField]
         double m_PublishRateHz = 20f;
@@ -39,6 +39,10 @@ using UnityEngine;
         // Start is called before the first frame update
         void Start()
         {
+            Namespace ns = gameObject.transform.root.GetComponent<Namespace>();
+            if(ns != null && ns.useNamespace)
+                k_TfTopic = ns.namesapce + "/" +k_TfTopic;
+
             if (m_RootGameObject == null)
             {
                 Debug.LogWarning($"No GameObject explicitly defined as {nameof(m_RootGameObject)}, so using {name} as root.");
@@ -48,12 +52,14 @@ using UnityEngine;
             m_ROS = ROSConnection.GetOrCreateInstance();
             m_TransformRoot = new TransformTreeNode(m_RootGameObject);
 		
+        
+
 
             m_ROS.RegisterPublisher<TFMessageMsg>(k_TfTopic);
             m_LastPublishTimeSeconds = Clock.time + PublishPeriodSeconds;
         }
 
-        static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTreeNode tfNode, String tf_prefix)
+        static void PopulateTFList(List<TransformStampedMsg> tfList, TransformTreeNode tfNode)
         {
             // TODO: Some of this could be done once and cached rather than doing from scratch every time
             // Only generate transform messages from the children, because This node will be parented to the global frame
@@ -64,7 +70,7 @@ using UnityEngine;
 
                 if (!childTf.IsALeafNode)
                 {
-                    PopulateTFList(tfList, childTf, tf_prefix);
+                    PopulateTFList(tfList, childTf);
                 }
             }
         }
@@ -79,8 +85,8 @@ using UnityEngine;
                 tm.translation.z = 0;
                 var tfRootToGlobal = new TransformStampedMsg(
                     new HeaderMsg(new TimeStamp(Clock.time), 
-                    tf_prefix + m_GlobalFrameIds.Last()),
-                    tf_prefix + m_TransformRoot.name,
+                     m_GlobalFrameIds.Last()),
+                     m_TransformRoot.name,
                     tm);
                 tfMessageList.Add(tfRootToGlobal);
             }
@@ -101,7 +107,7 @@ using UnityEngine;
                 tfMessageList.Add(tfGlobalToGlobal);
             }
 
-            PopulateTFList(tfMessageList, m_TransformRoot, tf_prefix);
+            PopulateTFList(tfMessageList, m_TransformRoot);
 
             var tfMessage = new TFMessageMsg(tfMessageList.ToArray());
             m_ROS.Publish(k_TfTopic, tfMessage);

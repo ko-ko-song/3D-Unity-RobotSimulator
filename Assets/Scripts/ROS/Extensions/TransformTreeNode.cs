@@ -17,23 +17,20 @@ class TransformTreeNode
     public string name;
     public bool IsALeafNode => Children.Count == 0;
 
-    private string tf_prefix;
-
-    public TransformTreeNode(GameObject sceneObject, string tf_prefix)
+    public TransformTreeNode(GameObject sceneObject)
     {
         SceneObject = sceneObject;
         name = SceneObject.name;
-        this.tf_prefix = tf_prefix;
         Children = new List<TransformTreeNode>();
-        PopulateChildNodes(this, tf_prefix);
+        PopulateChildNodes(this);
     }
 
-    public static TransformStampedMsg ToTransformStamped(TransformTreeNode node, string tf_prefix)
+    public static TransformStampedMsg ToTransformStamped(TransformTreeNode node)
     {
-        return node.Transform.ToROSTransformStamped(Clock.time, tf_prefix);
+        return node.Transform.ToROSTransformStamped(Clock.time);
     }
 
-    static void PopulateChildNodes(TransformTreeNode tfNode, string tf_prefix)
+    static void PopulateChildNodes(TransformTreeNode tfNode)
     {
         var parentTransform = tfNode.Transform;
         for (var childIndex = 0; childIndex < parentTransform.childCount; ++childIndex)
@@ -44,7 +41,7 @@ class TransformTreeNode
             // If game object has a URDFLink attached, it's a link in the transform tree
             if (childGO.TryGetComponent(out UrdfLink _))
             {
-                var childNode = new TransformTreeNode(childGO, tf_prefix);
+                var childNode = new TransformTreeNode(childGO);
                 tfNode.Children.Add(childNode);
             }
         }
