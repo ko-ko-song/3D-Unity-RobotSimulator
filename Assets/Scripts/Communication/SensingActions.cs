@@ -12,21 +12,7 @@ public class SensingActions : MonoBehaviour
     public float elevatorMovingSpeed = 0.2f;
     public float distanceBetweenFloors = 2.0f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    public void test()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
 
     public void executeAction(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance)
@@ -105,10 +91,31 @@ public class SensingActions : MonoBehaviour
         {
             sensorActuatorModule.sendMessgae(actionProtocolInstance.getResultMessage(3));
         }
+        
+        Transform left_door_transform = null;
+        Transform right_door_transform = null;
+        Transform frontDoorTransform = elevator.transform.Find("front_door");
+        Transform backDoorTransform = elevator.transform.Find("back_door");
 
-        Transform left_door_transform = elevator.transform.Find("left_door");
-        Transform right_door_transform = elevator.transform.Find("right_door");
+        if(frontDoorTransform){
+            if(elevator.transform.position.y <1.5 ){
+                left_door_transform = frontDoorTransform.Find("left_door");
+                right_door_transform = frontDoorTransform.Find("right_door");    
+        Debug.Log(left_door_transform);
 
+            }
+            else{
+                left_door_transform = backDoorTransform.Find("left_door");
+                right_door_transform = backDoorTransform.Find("right_door");    
+        Debug.Log(left_door_transform);
+
+            }
+        }else{
+            left_door_transform = elevator.transform.Find("left_door");
+            right_door_transform = elevator.transform.Find("right_door");
+        Debug.Log(left_door_transform);
+
+        }
         Renderer leftDoorRenderer = left_door_transform.GetComponent<Renderer>();
         Bounds bounds = leftDoorRenderer.bounds;
         Vector3 leftDoorActualSize = bounds.size;
@@ -174,10 +181,6 @@ public class SensingActions : MonoBehaviour
             return;
         }
 
-        if (elevator.transform.Find("left_door").GetComponent<Door>().isOpend)
-        {
-            return;
-        }
 
         IEnumerator coroutine = openElevatorDoor(sensorActuatorModule, actionProtocolInstance, elevator, functionArgs);
 
@@ -191,9 +194,24 @@ public class SensingActions : MonoBehaviour
             sensorActuatorModule.sendMessgae(actionProtocolInstance.getResultMessage(1));
         }
 
-        Transform left_door_transform = elevator.transform.Find("left_door");
-        Transform right_door_transform = elevator.transform.Find("right_door");
+        Transform left_door_transform = null;
+        Transform right_door_transform = null;
+        Transform frontDoorTransform = elevator.transform.Find("front_door");
+        Transform backDoorTransform = elevator.transform.Find("back_door");
 
+        if(frontDoorTransform){
+            if(elevator.transform.position.y <1.5 ){
+                left_door_transform = frontDoorTransform.Find("left_door");
+                right_door_transform = frontDoorTransform.Find("right_door");    
+            }
+            else{
+                left_door_transform = backDoorTransform.Find("left_door");
+                right_door_transform = backDoorTransform.Find("right_door");    
+            }
+        }else{
+            left_door_transform = elevator.transform.Find("left_door");
+            right_door_transform = elevator.transform.Find("right_door");
+        }
         Vector3 left_door_originalPosition = new Vector3(left_door_transform.GetComponent<Door>().originalPositionX, left_door_transform.position.y, left_door_transform.GetComponent<Door>().originalPositionZ);
         Vector3 right_door_originalPosition = new Vector3(right_door_transform.GetComponent<Door>().originalPositionX, right_door_transform.position.y, right_door_transform.GetComponent<Door>().originalPositionZ);
 
@@ -349,10 +367,6 @@ public class SensingActions : MonoBehaviour
             return;
         }
 
-        if (door.transform.Find("left_door").GetComponent<Door>().isOpend)
-        {
-            return;
-        }
 
         IEnumerator coroutine = openDoor(sensorActuatorModule, actionProtocolInstance, door, functionArgs);
 
@@ -433,11 +447,6 @@ public class SensingActions : MonoBehaviour
             return;
         }
         
-        if (!door.transform.Find("left_door").GetComponent<Door>().isOpend)
-        {
-            return;
-        }
-
         IEnumerator coroutine = closeDoor(sensorActuatorModule, actionProtocolInstance, door, functionArgs);
 
         StartCoroutine(coroutine);
