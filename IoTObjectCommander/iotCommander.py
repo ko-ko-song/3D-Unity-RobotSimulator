@@ -40,7 +40,9 @@ def create_message(choice):
         return None
 
 # 서버 정보 설정
+# HOST = '192.168.0.58'  # 서버 주소
 HOST = '192.168.0.161'  # 서버 주소
+    
 PORT = 20808        # 포트 번호
 
 # TCP 소켓 생성 및 연결

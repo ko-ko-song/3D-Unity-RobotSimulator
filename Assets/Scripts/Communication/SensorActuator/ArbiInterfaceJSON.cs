@@ -85,6 +85,7 @@ public class ArbiInterfaceJSON
             {
                 sr = new StreamReader(ns);
                 string receivedMessage = sr.ReadLine();
+                
                 Debug.Log("receivedMessage : \n" + receivedMessage);
                 this.parseMessage(receivedMessage);
             }

@@ -72,11 +72,7 @@ public class SensingActions : MonoBehaviour
             Debug.Log("�ش� id�� elevator door�� ã�� �� ����");
             return;
         }
-        
-        if (!elevator.transform.Find("left_door").GetComponent<Door>().isOpend)
-        {
-            return;
-        }
+    
 
 
         IEnumerator coroutine = closeElevatorDoor(sensorActuatorModule, actionProtocolInstance, elevator, functionArgs);
