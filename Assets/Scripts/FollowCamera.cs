@@ -4,23 +4,14 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    public Transform target; // Ä«¸Þ¶ó°¡ µû¶ó°¥ ´ë»ó ¿ÀºêÁ§Æ®
-    public Transform pivotPoint; // È¸Àü ±âÁØÀÌ µÉ Á¡
-    public float rotationSpeed = 1.0f; // È¸Àü ¼Óµµ
+    public Transform target; // Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®
+    public Transform pivotPoint; // È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
+    public float rotationSpeed = 1.0f; // È¸ï¿½ï¿½ ï¿½Óµï¿½
     public Vector3 offset;
 
 
     void Update()
     {
-        // ´ë»ó ¿ÀºêÁ§Æ®ÀÇ À§Ä¡¿¡ µû¶ó Ä«¸Þ¶ó¸¦ ÀÌµ¿½ÃÅ´
-        //transform.position = target.position + offset;
-
-        //// pivotPoint¸¦ ±âÁØÀ¸·Î Ä«¸Þ¶ó È¸Àü
-        //Vector3 directionToPivot = pivotPoint.position - transform.position;
-        //Quaternion targetRotation = Quaternion.LookRotation(directionToPivot);
-        //Vector3 rot = new Vector3(transform.rotation.x, target.rotation.y, transform.rotation.z);
-        //transform.rotation = Quaternion.Euler(rot);
-
         Vector3 directionToPivot = transform.position - pivotPoint.position;
         Quaternion rotation = Quaternion.AngleAxis(rotationSpeed * Time.deltaTime, directionToPivot);
         transform.position = pivotPoint.position + rotation * (transform.position - pivotPoint.position);
