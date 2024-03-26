@@ -1406,17 +1406,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8293e12d0c46eab409c8b3a4d4c9b9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheel1: {fileID: 1746036911}
-  wheel2: {fileID: 1430684934}
-  mode: 1
-  topicName: cmd_vel
-  maxLinearSpeed: 10
-  maxRotationalSpeed: 10
-  wheelRadius: 0.065
-  trackWidth: 0.37476
-  forceLimit: 1000
-  damping: 100
-  ROSTimeout: 0.5
 --- !u!114 &90777382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22210,14 +22199,12 @@ MonoBehaviour:
   wheel_l: {fileID: 1177112460}
   wheel_r: {fileID: 1791501438}
   mode: 1
-  topicName: cmd_vel
   maxLinearSpeed: 2
   maxRotationalSpeed: 1
   wheelRadius: 0.065
   trackWidth: 0.37476
   forceLimit: 1000
   damping: 100
-  ROSTimeout: 0.5
 --- !u!114 &1708539304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22601,6 +22588,10 @@ MonoBehaviour:
   left_wheel: {fileID: 1758286415494656848}
   right_wheel: {fileID: 278062183795058959}
   wheelRadius: 0.033
+  vRight: 0
+  vLeft: 0
+  left_wheel_ab: {fileID: 0}
+  right_wheel_ab: {fileID: 0}
   maxLinearSpeed: 0.8
   maxRotationalSpeed: 0.5
   trackWidth: 0.288
@@ -22608,6 +22599,11 @@ MonoBehaviour:
   damping: 10
   stiffness: 100
   ROSTimeout: 0.5
+  lastCmdReceived: 0
+  ros: {fileID: 0}
+  direction: 0
+  rosLinear: 0
+  rosAngular: 0
   keyboardLinearSpped: 0.8
   keyboardRotationSpped: 0.5
 --- !u!114 &1742530996
@@ -24800,17 +24796,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8293e12d0c46eab409c8b3a4d4c9b9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheel1: {fileID: 94132028}
-  wheel2: {fileID: 2000264031}
-  mode: 1
-  topicName: robot2/cmd_vel
-  maxLinearSpeed: 10
-  maxRotationalSpeed: 10
-  wheelRadius: 0.065
-  trackWidth: 0.37476
-  forceLimit: 1000
-  damping: 100
-  ROSTimeout: 0.5
 --- !u!114 &1908570902
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26268,6 +26253,12 @@ MonoBehaviour:
   rear_right_wheel: {fileID: 1142610472}
   wheelTrackLength: 0.555
   wheelRadius: 0.1651
+  vRight: 0
+  vLeft: 0
+  f_l_wA: {fileID: 0}
+  f_r_wA: {fileID: 0}
+  r_l_wA: {fileID: 0}
+  r_r_wA: {fileID: 0}
   maxLinearSpeed: 1
   maxRotationalSpeed: 1.5
   trackWidth: 0.555
@@ -26275,6 +26266,9 @@ MonoBehaviour:
   damping: 10000
   stiffness: 1000
   ROSTimeout: 0.5
+  lastCmdReceived: 0
+  ros: {fileID: 0}
+  direction: 0
   rosLinear: 0
   rosAngular: 0
   keyboardLinearSpped: 0.5
@@ -30932,17 +30926,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8293e12d0c46eab409c8b3a4d4c9b9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wheel1: {fileID: 1758286415494656848}
-  wheel2: {fileID: 278062183795058959}
-  mode: 0
-  topicName: cmd_vel
-  maxLinearSpeed: 0.8
-  maxRotationalSpeed: 0.5
-  wheelRadius: 0.033
-  trackWidth: 0.288
-  forceLimit: 1000
-  damping: 100
-  ROSTimeout: 0.5
 --- !u!4 &1943558202736548456
 Transform:
   m_ObjectHideFlags: 0
@@ -31451,6 +31434,12 @@ MonoBehaviour:
   rear_right_wheel: {fileID: 1771621320433019050}
   wheelTrackLength: 0.555
   wheelRadius: 0.1651
+  vRight: 0
+  vLeft: 0
+  f_l_wA: {fileID: 0}
+  f_r_wA: {fileID: 0}
+  r_l_wA: {fileID: 0}
+  r_r_wA: {fileID: 0}
   maxLinearSpeed: 1
   maxRotationalSpeed: 1.5
   trackWidth: 0.555
@@ -31458,6 +31447,9 @@ MonoBehaviour:
   damping: 10000
   stiffness: 1000
   ROSTimeout: 0.5
+  lastCmdReceived: 0
+  ros: {fileID: 0}
+  direction: 0
   rosLinear: 0
   rosAngular: 0
   keyboardLinearSpped: 0.5
@@ -36765,7 +36757,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6708888637446624110}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4cbb2cca21ecbd246bdb6717d6b900b7, type: 3}
   m_Name: 
@@ -38627,14 +38619,12 @@ MonoBehaviour:
   wheel_l: {fileID: 7963588031523558832}
   wheel_r: {fileID: 7490934186000494611}
   mode: 1
-  topicName: cmd_vel
   maxLinearSpeed: 2
   maxRotationalSpeed: 1
   wheelRadius: 0.065
   trackWidth: 0.37476
   forceLimit: 1000
   damping: 100
-  ROSTimeout: 0.5
 --- !u!114 &6704796801054729671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -38667,13 +38657,46 @@ GameObject:
   - component: {fileID: 4364842120957977180}
   - component: {fileID: 2214570858677968383}
   - component: {fileID: 1256067551188015932}
+  - component: {fileID: 6708888637446624112}
+  - component: {fileID: 6708888637446624111}
   m_Layer: 0
   m_Name: robot1
   m_TagString: robot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
+--- !u!114 &6708888637446624111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708888637446624110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68640145f7298f21b91c328967b6830e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftWheel: {fileID: 3914171160581992796}
+  rightWheel: {fileID: 2614612217420265972}
+  wheelTrackLength: 0
+  wheelRadius: 0
+--- !u!114 &6708888637446624112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6708888637446624110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 972d0a14e9b6927a3ac0006e867dcf29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheelController: {fileID: 6708888637446624111}
+  speed: 1.5
+  angularSpeed: 1.5
 --- !u!4 &6712552946282573424
 Transform:
   m_ObjectHideFlags: 0

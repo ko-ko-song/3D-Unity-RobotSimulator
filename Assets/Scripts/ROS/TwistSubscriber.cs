@@ -15,31 +15,41 @@ public class TwistSubscriber : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string twistTopicName = "cmd_vel";
+    public string topicName = "cmd_vel";
 
-    public ArticulationWheelController wheelController;
-    private float targetLinearSpeed;
-    private float targetAngularSpeed;
+    public AGVController_m agvController;
+    private float robotLinearSpeed;
+    private float robotAngularSpeed;
     
+    public float ROSTimeout = 0.5f;
+    private float lastCmdReceived = 0f;
+
     void Start()
     {
+        Namespace ns = gameObject.transform.root.GetComponent<Namespace>();
+        if(ns != null && ns.useNamespace)
+            topicName = ns.namesapce + "/" +topicName;
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
 
-        targetLinearSpeed = 0f;
-        targetAngularSpeed = 0f;
+        robotLinearSpeed = 0f;
+        robotAngularSpeed = 0f;
         
-        ros.Subscribe<TwistMsg>(twistTopicName, UpdateVelocity);
-    }
-    
-    void FixedUpdate()
-    {
-        wheelController.SetRobotVelocity(targetLinearSpeed, targetAngularSpeed);
+        ros.Subscribe<TwistMsg>(topicName, UpdateVelocity);
     }
 
     private void UpdateVelocity(TwistMsg twist)
     {
-        targetLinearSpeed = twist.linear.From<FLU>().z;
-        targetAngularSpeed = twist.angular.From<FLU>().y;
+
+        robotLinearSpeed = twist.linear.From<FLU>().z;
+        robotAngularSpeed = twist.angular.From<FLU>().y;
+        if (Time.time - lastCmdReceived > ROSTimeout)
+        {
+            robotLinearSpeed = 0f;
+            robotAngularSpeed = 0f;
+        }
+        agvController.SetRobotSpeed(robotLinearSpeed, robotAngularSpeed);
+        lastCmdReceived = Time.time;
     }
 }
+
