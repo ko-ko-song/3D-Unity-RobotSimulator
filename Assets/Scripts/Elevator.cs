@@ -64,8 +64,9 @@ public class Elevator : MonoBehaviour
     }
 
     public void OpenElevatorDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs){
-        int floor = Mathf.RoundToInt(transform.position.y / distanceBetweenFloors);
 
+
+        int floor = Mathf.RoundToInt(transform.position.y / distanceBetweenFloors);
         DoorDirection direction = DoorDirection.Front;
 
         if(doorDirectionByFloors.Count > floor)
@@ -76,7 +77,7 @@ public class Elevator : MonoBehaviour
             door = backDoorTransform.GetComponent<Door>();
         else 
             door = frontDoorTransform.GetComponent<Door>();
-        
+        state = ElevatorState.DoorOpening;        
         door.OpenDoor(sensorActuatorModule, actionProtocolInstance, null, setElevatorStateDoorOpend);
     }
 
@@ -93,7 +94,8 @@ public class Elevator : MonoBehaviour
             door = backDoorTransform.GetComponent<Door>();
         else 
             door = frontDoorTransform.GetComponent<Door>();
-        
+
+        state = ElevatorState.DoorClosing;        
         door.CloseDoor(sensorActuatorModule, actionProtocolInstance, null, setElevatorStateIDLE);
     }
 

@@ -47,46 +47,47 @@ public class Door : MonoBehaviour
         Vector3 leftDoorActualSize = bounds.size;
 
         float actualSizeX = leftDoorActualSize.x;
-        float actualSizeZ = leftDoorActualSize.z;
-
-        float elapsedTime = 0.0f;
         float openingRatio = actualSizeX / transform.localScale.x / doorOpenTime;
 
-        while (elapsedTime <= doorOpenTime)
-        {
-            if(doorState != DoorState.closed)
-                break;
+        float elapsedTime = 0.0f;
+        if(doorState == DoorState.closed){
+            doorState = DoorState.opening;
+            while (elapsedTime <= doorOpenTime)
+            {
 
-            // if (actualSizeX > actualSizeZ)
-            // {
-            //     if (left_door_transform.position.x > right_door_transform.position.x)
-            //     {
-            //         left_door_transform.position = new Vector3(left_door_transform.position.x + openingRatio * Time.deltaTime, left_door_transform.position.y, left_door_transform.position.z);
-            //         right_door_transform.position = new Vector3(right_door_transform.position.x - openingRatio * Time.deltaTime, right_door_transform.position.y, right_door_transform.position.z);
-            //     }
-            //     else
-            //     {
-                    left_door_transform.localPosition = new Vector3(left_door_transform.localPosition.x - openingRatio * Time.deltaTime, left_door_transform.localPosition.y, left_door_transform.localPosition.z);
-                    right_door_transform.localPosition = new Vector3(right_door_transform.localPosition.x + openingRatio * Time.deltaTime, right_door_transform.localPosition.y, right_door_transform.localPosition.z);
-            //     }
+                // if (actualSizeX > actualSizeZ)
+                // {
+                //     if (left_door_transform.position.x > right_door_transform.position.x)
+                //     {
+                //         left_door_transform.position = new Vector3(left_door_transform.position.x + openingRatio * Time.deltaTime, left_door_transform.position.y, left_door_transform.position.z);
+                //         right_door_transform.position = new Vector3(right_door_transform.position.x - openingRatio * Time.deltaTime, right_door_transform.position.y, right_door_transform.position.z);
+                //     }
+                //     else
+                //     {
+                        left_door_transform.localPosition = new Vector3(left_door_transform.localPosition.x - openingRatio * Time.deltaTime, left_door_transform.localPosition.y, left_door_transform.localPosition.z);
+                        right_door_transform.localPosition = new Vector3(right_door_transform.localPosition.x + openingRatio * Time.deltaTime, right_door_transform.localPosition.y, right_door_transform.localPosition.z);
+                //     }
 
-            // }
-            // else
-            // {
-            //     if (left_door_transform.position.z > right_door_transform.position.z)
-            //     {
-            //         left_door_transform.position = new Vector3(left_door_transform.position.x, left_door_transform.position.y, left_door_transform.position.z + openingRatio * Time.deltaTime);
-            //         right_door_transform.position = new Vector3(right_door_transform.position.x, right_door_transform.position.y, right_door_transform.position.z - openingRatio * Time.deltaTime);
-            //     }
-            //     else
-            //     {
-            //         left_door_transform.position = new Vector3(left_door_transform.position.x, left_door_transform.position.y, left_door_transform.position.z - openingRatio * Time.deltaTime);
-            //         right_door_transform.position = new Vector3(right_door_transform.position.x, right_door_transform.position.y, right_door_transform.position.z + openingRatio * Time.deltaTime);
-            //     }
-            // }
-            elapsedTime += Time.deltaTime;
-            yield return null;
+                // }
+                // else
+                // {
+                //     if (left_door_transform.position.z > right_door_transform.position.z)
+                //     {
+                //         left_door_transform.position = new Vector3(left_door_transform.position.x, left_door_transform.position.y, left_door_transform.position.z + openingRatio * Time.deltaTime);
+                //         right_door_transform.position = new Vector3(right_door_transform.position.x, right_door_transform.position.y, right_door_transform.position.z - openingRatio * Time.deltaTime);
+                //     }
+                //     else
+                //     {
+                //         left_door_transform.position = new Vector3(left_door_transform.position.x, left_door_transform.position.y, left_door_transform.position.z - openingRatio * Time.deltaTime);
+                //         right_door_transform.position = new Vector3(right_door_transform.position.x, right_door_transform.position.y, right_door_transform.position.z + openingRatio * Time.deltaTime);
+                //     }
+                // }
+                elapsedTime += Time.deltaTime;
+                yield return null;
         }
+        }
+
+
 
         
         if (actionProtocolInstance.getProtocolType().Equals("result"))
@@ -103,25 +104,24 @@ public class Door : MonoBehaviour
         Renderer leftDoorRenderer = left_door_transform.GetComponent<Renderer>();
         Bounds bounds = leftDoorRenderer.bounds;
         Vector3 leftDoorActualSize = bounds.size;
-
         float actualSizeX = leftDoorActualSize.x;
-        float actualSizeZ = leftDoorActualSize.z;
-
+        float  closingRatio = actualSizeX / transform.localScale.x / doorOpenTime;
         float elapsedTime = 0.0f;
 
-        float  closingRatio = actualSizeX / transform.localScale.x / doorOpenTime;
+        if(doorState == DoorState.opend){
+            doorState = DoorState.closing;
+            while (elapsedTime <= doorClosingTime)
+            {
+                left_door_transform.localPosition = new Vector3(left_door_transform.localPosition.x + closingRatio * Time.deltaTime, left_door_transform.localPosition.y, left_door_transform.localPosition.z);
+                right_door_transform.localPosition = new Vector3(right_door_transform.localPosition.x - closingRatio * Time.deltaTime, right_door_transform.localPosition.y, right_door_transform.localPosition.z);
 
-        while (elapsedTime <= doorClosingTime)
-        {
-            if(doorState != DoorState.opend)
-                break;
-
-            left_door_transform.localPosition = new Vector3(left_door_transform.localPosition.x + closingRatio * Time.deltaTime, left_door_transform.localPosition.y, left_door_transform.localPosition.z);
-            right_door_transform.localPosition = new Vector3(right_door_transform.localPosition.x - closingRatio * Time.deltaTime, right_door_transform.localPosition.y, right_door_transform.localPosition.z);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
         }
+                
+                
+        
 
 
         if (actionProtocolInstance.getProtocolType().Equals("result"))

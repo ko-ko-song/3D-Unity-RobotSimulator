@@ -2165,7 +2165,7 @@ MonoBehaviour:
   distanceBetweenFloors: 2
   doorOpenTime: 1
   doorClosingTime: 1
-  elevatorType: 1
+  elevatorType: 0
 --- !u!1 &234392875
 GameObject:
   m_ObjectHideFlags: 0
