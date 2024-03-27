@@ -28,18 +28,18 @@ public class Door : MonoBehaviour
             right_door_transform = transform.Find("right_door");
     }
     
-    public void OpenDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs){
-        IEnumerator coroutine = OpenDoorCoroutine(sensorActuatorModule, actionProtocolInstance, functionArgs);
+    public void OpenDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs, System.Action callback){
+        IEnumerator coroutine = OpenDoorCoroutine(sensorActuatorModule, actionProtocolInstance, functionArgs, callback);
         StartCoroutine(coroutine);
     }
 
-    public void CloseDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs)
+    public void CloseDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs, System.Action callback)
     {
-        IEnumerator coroutine = CloseDoorCoroutine(sensorActuatorModule, actionProtocolInstance, functionArgs);
+        IEnumerator coroutine = CloseDoorCoroutine(sensorActuatorModule, actionProtocolInstance, functionArgs, callback);
         StartCoroutine(coroutine);
     }
     
-    private IEnumerator OpenDoorCoroutine(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs)
+    private IEnumerator OpenDoorCoroutine(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs, System.Action callback)
     {
         Renderer leftDoorRenderer = left_door_transform.GetComponent<Renderer>();
 
@@ -95,10 +95,10 @@ public class Door : MonoBehaviour
         }
 
         this.doorState = DoorState.opend;
-        
+        callback?.Invoke();
     }
 
-    private IEnumerator CloseDoorCoroutine(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs)
+    private IEnumerator CloseDoorCoroutine(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs, System.Action callback)
     {
         Renderer leftDoorRenderer = left_door_transform.GetComponent<Renderer>();
         Bounds bounds = leftDoorRenderer.bounds;
@@ -130,6 +130,7 @@ public class Door : MonoBehaviour
         }
 
         this.doorState = DoorState.closed;
+        callback?.Invoke();
     }
     
 }

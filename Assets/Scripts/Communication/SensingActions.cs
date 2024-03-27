@@ -118,7 +118,7 @@ public class SensingActions : MonoBehaviour
             return;
         }
         Door door = doorGobj.GetComponent<Door>();        
-        door.OpenDoor(sensorActuatorModule, actionProtocolInstance, functionArgs);
+        door.OpenDoor(sensorActuatorModule, actionProtocolInstance, functionArgs, null);
     }
 
     private void RequestCloseDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs)
@@ -133,7 +133,7 @@ public class SensingActions : MonoBehaviour
         }
 
         Door door = doorGobj.GetComponent<Door>();        
-        door.CloseDoor(sensorActuatorModule, actionProtocolInstance, functionArgs);
+        door.CloseDoor(sensorActuatorModule, actionProtocolInstance, functionArgs, null);
     }
 
 }

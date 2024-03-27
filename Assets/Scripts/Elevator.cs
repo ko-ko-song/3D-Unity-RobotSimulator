@@ -33,19 +33,28 @@ public class Elevator : MonoBehaviour
         if(backDoorTransform == null)
             backDoorTransform = transform.Find("back_door");
 
-        Door frontDoor = frontDoorTransform.GetComponent<Door>();
-        if(frontDoor == null){
-            frontDoor = frontDoorTransform.gameObject.AddComponent<Door>();
-            frontDoor.doorOpenTime = this.doorOpenTime;
-            frontDoor.doorClosingTime = this.doorClosingTime;
+
+        if(frontDoorTransform == null)
+            frontDoorTransform = transform.Find("door");
+
+        if(frontDoorTransform != null){
+            Door frontDoor = frontDoorTransform.GetComponent<Door>();
+            if(frontDoor == null){
+                frontDoor = frontDoorTransform.gameObject.AddComponent<Door>();
+                frontDoor.doorOpenTime = this.doorOpenTime;
+                frontDoor.doorClosingTime = this.doorClosingTime;
+            }
         }
 
-        Door backDoor = backDoorTransform.GetComponent<Door>();
-        if(backDoor == null){
-            backDoor = backDoorTransform.gameObject.AddComponent<Door>();
-            backDoor.doorOpenTime = this.doorOpenTime;
-            backDoor.doorClosingTime = this.doorClosingTime;
+        if(backDoorTransform != null ){
+            Door backDoor = backDoorTransform.GetComponent<Door>();
+            if(backDoor == null){
+                backDoor = backDoorTransform.gameObject.AddComponent<Door>();
+                backDoor.doorOpenTime = this.doorOpenTime;
+                backDoor.doorClosingTime = this.doorClosingTime;
+            }
         }
+        
 
     }
 
@@ -58,10 +67,8 @@ public class Elevator : MonoBehaviour
         int floor = Mathf.RoundToInt(transform.position.y / distanceBetweenFloors);
 
         DoorDirection direction = DoorDirection.Front;
-        Debug.Log(doorDirectionByFloors.Count);
-        Debug.Log(floor);
 
-        if(doorDirectionByFloors.Count >= floor)
+        if(doorDirectionByFloors.Count > floor)
             direction = doorDirectionByFloors[floor];
         
         Door door = null;
@@ -70,7 +77,7 @@ public class Elevator : MonoBehaviour
         else 
             door = frontDoorTransform.GetComponent<Door>();
         
-        door.OpenDoor(sensorActuatorModule, actionProtocolInstance, null);
+        door.OpenDoor(sensorActuatorModule, actionProtocolInstance, null, setElevatorStateDoorOpend);
     }
 
 
@@ -78,7 +85,7 @@ public class Elevator : MonoBehaviour
         int floor = Mathf.RoundToInt(transform.position.y / distanceBetweenFloors);
 
         DoorDirection direction = DoorDirection.Front;
-        if(doorDirectionByFloors.Count >= floor)
+        if(doorDirectionByFloors.Count > floor)
             direction = doorDirectionByFloors[floor];
         
         Door door = null;
@@ -87,16 +94,28 @@ public class Elevator : MonoBehaviour
         else 
             door = frontDoorTransform.GetComponent<Door>();
         
-        door.CloseDoor(sensorActuatorModule, actionProtocolInstance, null);
+        door.CloseDoor(sensorActuatorModule, actionProtocolInstance, null, setElevatorStateIDLE);
+    }
+
+    public void setElevatorStateDoorOpend(){
+        state = ElevatorState.DoorOpend;
+    }
+
+    public void setElevatorStateIDLE(){
+        state = ElevatorState.IDLE;
     }
 
     private IEnumerator MoveElevatorCoroutine(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, int floor)
     {
-        
+        if(state != ElevatorState.IDLE)
+            yield break;
+
         float goalHeight = floor * distanceBetweenFloors;
         Vector3 targetPosition = new Vector3(transform.position.x, goalHeight, transform.position.z);
 
-        if (Mathf.Abs(transform.position.y - goalHeight) < 0.1f)
+        float diffHeight = goalHeight - transform.position.y;
+
+        if (Mathf.Abs(diffHeight) < 0.1f)
         {
             if (actionProtocolInstance.getProtocolType().Equals("result"))
             {
@@ -105,9 +124,15 @@ public class Elevator : MonoBehaviour
             yield break;
         }
         
+        if(diffHeight > 0)
+            state = ElevatorState.GoingUp;
+        else
+            state = ElevatorState.GoingDown;
+            
+
         while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
         {
-            float elevatorMovingSpeed = goalHeight / elevatorMovingTimePerFloor;
+            float elevatorMovingSpeed = distanceBetweenFloors / elevatorMovingTimePerFloor;
             
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, elevatorMovingSpeed * Time.deltaTime);
             yield return null;
@@ -117,6 +142,7 @@ public class Elevator : MonoBehaviour
         {
             sensorActuatorModule.sendMessgae(actionProtocolInstance.getResultMessage(floor));
         }
+        state = ElevatorState.IDLE;
 
     }
 }
