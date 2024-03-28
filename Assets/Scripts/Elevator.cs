@@ -16,6 +16,8 @@ public class Elevator : MonoBehaviour
         twoDoor
     }
 
+    public GameObject test;
+
     public Transform frontDoorTransform;
     public Transform backDoorTransform;
     public List<DoorDirection> doorDirectionByFloors = new List<DoorDirection>();
@@ -126,19 +128,46 @@ public class Elevator : MonoBehaviour
             yield break;
         }
         
+        // foreach (var obj in hashsetLiftingObjects)
+		// {
+            
+			// var articulationBodies = test.GetComponentsInChildren<ArticulationBody>();
+			// foreach (var articulationBody in articulationBodies)
+			// {
+			// 	if (articulationBody.isRoot)
+			// 	{
+			// 		var a = articulationBody.transform;
+            //         a.SetParent(transform);
+			// 		break;
+			// 	}
+			// }
+		// }
+        ArticulationBody joint =  GetComponent<ArticulationBody>();
+
+        while (Vector3.Distance(transform.position, targetPosition) > 0.001f){
+
+            joint.AddForce(Vector3.up * 10000);
+            // ArticulationDrive drive = joint.xDrive;
+            // drive.targetVelocity = 10000;
+            
+            // joint.xDrive = drive;
+            yield return null;
+
+        }
+
         if(diffHeight > 0)
             state = ElevatorState.GoingUp;
         else
             state = ElevatorState.GoingDown;
             
 
-        while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
-        {
-            float elevatorMovingSpeed = distanceBetweenFloors / elevatorMovingTimePerFloor;
+        // while (Vector3.Distance(transform.position, targetPosition) > 0.001f)
+        // {
+        //     float elevatorMovingSpeed = distanceBetweenFloors / elevatorMovingTimePerFloor;
             
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, elevatorMovingSpeed * Time.deltaTime);
-            yield return null;
-        }
+        //     transform.position = Vector3.MoveTowards(transform.position, targetPosition, elevatorMovingSpeed * Time.deltaTime);
+        //     yield return null;
+        // }
         
         if (actionProtocolInstance.getProtocolType().Equals("result"))
         {

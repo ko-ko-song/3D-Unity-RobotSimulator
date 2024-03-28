@@ -15,7 +15,7 @@ namespace Unity.Robotics.Core
             // Real time delta to the exact moment this function is called, since beginning of the game 
             // UnityUnscaled,
             // Real time delta since the Unix Epoch (1/1/1970 @ midnight)
-            // UnixEpoch,
+            UnixEpoch,
             // Examples of other potentially useful clock modes...
             // UnixEpochUtc,
             // DateTimeNow,
@@ -49,6 +49,7 @@ namespace Unity.Robotics.Core
                 };
             }
         }
+
 
         public static double NowTimeInSeconds
         {
