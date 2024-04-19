@@ -7,6 +7,8 @@ public class ElevatorOneDoor : Elevator
     public Transform doorTransform;
 
     public override void Start(){
+        base.Start();
+
         if(doorTransform == null)
             doorTransform = transform.Find("door");
 

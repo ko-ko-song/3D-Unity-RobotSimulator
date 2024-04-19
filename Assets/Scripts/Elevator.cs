@@ -5,15 +5,33 @@ using UnityEngine;
 
 public abstract class Elevator : MonoBehaviour
 {
+    public Dictionary<Transform, Transform> robotParentsTemp;
+
+    public List<GameObject> inElevatorObjs;
+
     public float elevatorMovingTimePerFloor = 10f;
     public float distanceBetweenFloors = 2.0f;
     public float doorOpenTime = 2.0f;
     public float doorClosingTime = 2.0f;    
     public ElevatorState state = ElevatorState.IDLE;
 
-    public GameObject[] gobjsInElevator;
 
     public virtual void Start(){
+        robotParentsTemp = new Dictionary<Transform, Transform>();
+        inElevatorObjs = new List<GameObject>();
+        Rigidbody rb = gameObject.AddComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.isKinematic = true;
+    }
+    void OnCollisionEnter(Collision collision)
+    {
+        inElevatorObjs.Add(collision.gameObject);
+        
+    }
+    
+    void OnCollisionExit(Collision collision){
+        if(inElevatorObjs.Contains(collision.gameObject))
+            inElevatorObjs.Remove(collision.gameObject);
     }
 
     public abstract void OpenElevatorDoor(SensorActuatorModule sensorActuatorModule, ActionProtocolInstance actionProtocolInstance, List<string> functionArgs);
@@ -44,19 +62,38 @@ public abstract class Elevator : MonoBehaviour
             yield break;
         }
         
+        foreach(var gobj in inElevatorObjs){
+            var rootGameobject = gobj.transform.root.gameObject;
+            var articulationBodies = rootGameobject.GetComponentsInChildren<ArticulationBody>();
+            foreach (var articulationBody in articulationBodies)
+            {
+                if (articulationBody.isRoot)
+                {
+                    var robotBaseLinkTransform = articulationBody.transform;
+                    
+                    if(!robotParentsTemp.ContainsKey(robotBaseLinkTransform)){
+                        robotParentsTemp.Add(robotBaseLinkTransform, robotBaseLinkTransform.parent);
+                    }
+                    robotBaseLinkTransform.SetParent(transform);
+                    
+                }
+            }
+        }
+        
+
         // foreach (var obj in hashsetLiftingObjects)
 		// {
             
-			// var articulationBodies = test.GetComponentsInChildren<ArticulationBody>();
-			// foreach (var articulationBody in articulationBodies)
-			// {
-			// 	if (articulationBody.isRoot)
-			// 	{
-			// 		var a = articulationBody.transform;
-            //         a.SetParent(transform);
-			// 		break;
-			// 	}
-			// }
+		// 	var articulationBodies = test.GetComponentsInChildren<ArticulationBody>();
+		// 	foreach (var articulationBody in articulationBodies)
+		// 	{
+		// 		if (articulationBody.isRoot)
+		// 		{
+		// 			var a = articulationBody.transform;
+        //             a.SetParent(transform);
+		// 			break;
+		// 		}
+		// 	}
 		// }
 
         if(diffHeight > 0)
@@ -78,6 +115,12 @@ public abstract class Elevator : MonoBehaviour
         }
         state = ElevatorState.IDLE;
 
+
+        foreach(KeyValuePair<Transform, Transform> keyValuePair in robotParentsTemp){
+            Transform baseLink = keyValuePair.Key;
+            Transform baseLinkOriginalParent = keyValuePair.Value;
+            baseLink.SetParent(baseLinkOriginalParent);
+        }
     }
 
     

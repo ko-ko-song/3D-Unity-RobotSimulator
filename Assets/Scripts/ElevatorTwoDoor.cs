@@ -14,6 +14,8 @@ public class ElevatorTwoDoor : Elevator
     public List<DoorDirection> doorDirectionByFloors = new List<DoorDirection>();
 
     public override void Start(){
+        base.Start();
+
         if(frontDoorTransform == null)
             frontDoorTransform = transform.Find("front_door");
         if(backDoorTransform == null)
