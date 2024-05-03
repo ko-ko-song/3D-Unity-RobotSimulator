@@ -15,7 +15,7 @@ using UnityEngine;
     {
         // public string tf_prefix ="";
 
-        public string k_TfTopic = "robot1/tf";
+        public string k_TfTopic = "/tf";
 	    //private string multi_tfTopic = "";
         
 

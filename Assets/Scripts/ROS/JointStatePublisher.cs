@@ -19,7 +19,7 @@ public class JointStatePublisher : MonoBehaviour
     // ROS Connector
     private ROSConnection ros;
     // Variables required for ROS communication
-    public string jointStateTopicName = "joint_states";
+    public string topicName = "joint_states";
     public string frameId = "base_link";
 
     // Joints
@@ -37,9 +37,13 @@ public class JointStatePublisher : MonoBehaviour
 
     void Start()
     {
+        Namespace ns = gameObject.transform.root.GetComponent<Namespace>();
+        if(ns != null && ns.useNamespace)
+            topicName = ns.namesapce + "/" +topicName;
+
         // Get ROS connection static instance
         ros = ROSConnection.GetOrCreateInstance();
-        ros.RegisterPublisher<JointStateMsg>(jointStateTopicName);
+        ros.RegisterPublisher<JointStateMsg>(topicName);
 
         // Get joints
         // Use UrdfJoint because ArticulationBody provides
@@ -97,6 +101,6 @@ public class JointStatePublisher : MonoBehaviour
         jointState.velocity = Array.ConvertAll(velocities, x => (double)x);
         jointState.effort = Array.ConvertAll(forces, x => (double)x);
 
-        ros.Publish(jointStateTopicName, jointState);
+        ros.Publish(topicName, jointState);
     }
 }
