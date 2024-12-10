@@ -87,7 +87,6 @@ using Unity.Robotics.UrdfImporter.Control;
             {
                 inputSpeed = 0;
             }
-
             float turnDirction = Input.GetAxis("Horizontal");
             if (turnDirction > 0)
             {

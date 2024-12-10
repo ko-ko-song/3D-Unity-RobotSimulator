@@ -2,22 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Enumeration;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-//using static UnityEngine.Rendering.DebugUI;
-using static UnityEngine.UI.Image;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
+
+
+enum PointValue{
+    UNKNOWN = 127,
+    OCCUPIED = 0,
+    FREE = 254
+}
 
 public class OccupiedMapMaker : MonoBehaviour
 {
-    
     private float height; //m
     private float width ; //m
     private Vector3 origin; //m
     public float resolution = 0.05f;
-
+    public int startX = 0; //SLAM 시 로봇 시작 위치, 그냥 폐루프 아닌 아무 지점 다 가능
+    public int startY= 0;
+    
     private float offsetX;
     private float offsetY;
 
@@ -25,7 +27,7 @@ public class OccupiedMapMaker : MonoBehaviour
     public string path = "Assets/Maps/";
     public string filename = "testMap";
    
-    private bool[,] occupiedMap;
+    private int[,] occupiedMap;
     RaycastHit hitInfo;
 
     private float MatchToNearest(float value)
@@ -43,7 +45,14 @@ public class OccupiedMapMaker : MonoBehaviour
         origin = transform.position;
         int heightPixelCount = Mathf.CeilToInt(height / resolution);
         int widthPixelCount = Mathf.CeilToInt(width / resolution);
-        occupiedMap = new bool[heightPixelCount, widthPixelCount];
+        occupiedMap = new int[heightPixelCount, widthPixelCount];
+        for (int row = 0; row < heightPixelCount; row++)
+        {
+            for(int col = 0; col < widthPixelCount; col++)
+            {
+                occupiedMap[row, col] = (int)PointValue.UNKNOWN;
+            }
+        }
         offsetX = width / 2 - origin.x;
         offsetY = height / 2 - origin.z;
     }
@@ -51,24 +60,115 @@ public class OccupiedMapMaker : MonoBehaviour
     public void MakeOccupiedMap()
     {
         InitVariableSetting();
+        FindOccupancyPoints();
+        FindKnownPoints();
+        RemoveInnerOccupancyPoints();
 
-        for(float row = 0; row< height; row += resolution)
+
+
+
+
+
+        SaveArrayToTxtFile(occupiedMap);
+        SaveAsP5Binary(occupiedMap);
+        CreateYamlFile();
+    }
+    
+    private void RemoveInnerOccupancyPoints()
+    {
+        int rowCount = occupiedMap.GetLength(0);
+        int columnCount = occupiedMap.GetLength(1);
+
+        int[] dx = { -1, 1, 0, 0 };
+        int[] dy = { 0, 0, -1, 1 };
+
+        for (int row=0; row<rowCount; row++)
+        {
+            for(int col=0; col<columnCount; col++)
+            {
+                if(occupiedMap[row, col] == (int)PointValue.OCCUPIED)
+                {
+                    bool isFreePointNearby = false;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        int newX = col + dx[i];
+                        int newY = row + dy[i];
+                        
+                        if (newX >= 0 && newX < columnCount && newY >= 0 && newY < rowCount)
+                        {
+                            if (occupiedMap[newY, newX] == (int)PointValue.FREE)
+                            {
+                                isFreePointNearby = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!isFreePointNearby) occupiedMap[row, col] = (int)PointValue.UNKNOWN;
+                    
+                }
+                
+            }
+        }
+
+    }
+
+    private void FindOccupancyPoints()
+    {
+        for (float row = 0; row < height; row += resolution)
         {
             for (float column = 0; column < width; column += resolution)
             {
                 for (int i = 1; i < 6; i++)
                 {
-                    Vector3 pointToCheck = new Vector3(origin.x - width / 2 + column + resolution / i , origin.y, origin.z - height / 2 + row + resolution / i );
+                    Vector3 pointToCheck = new Vector3(origin.x - width / 2 + column + resolution / i, origin.y, origin.z - height / 2 + row + resolution / i);
                     DetectionCollisionPoint(pointToCheck);
                 }
             }
         }
-        
-        // SaveArrayToTxtFile(occupiedMap);
-        SaveAsP5Binary(occupiedMap);
-        CreateYamlFile();
     }
-    
+
+    private void FindKnownPoints()
+    {
+
+        int rowCount = occupiedMap.GetLength(0);
+        int columnCount = occupiedMap.GetLength(1);
+
+
+
+        int[] dx = { -1, 1, 0, 0 };
+        int[] dy = { 0, 0, -1, 1 };
+
+        bool[,] visited = new bool[rowCount, columnCount];
+        
+        Queue<(int, int)> queue = new Queue<(int, int)>();
+        int offsetStartX = Mathf.RoundToInt((startX + offsetX) / resolution);
+        int offsetStartY = Mathf.RoundToInt((startY + offsetY) / resolution);
+
+        queue.Enqueue((offsetStartY, offsetStartX));
+        visited[offsetStartY, offsetStartX] = true;
+        occupiedMap[offsetStartY, offsetStartX] = (int)PointValue.FREE;
+
+        while (queue.Count > 0)
+        {
+            var (currentY, currentX) = queue.Dequeue(); // 행(row), 열(column) 순으로 가져오기
+
+            for (int i = 0; i < 4; i++)
+            {
+                int newX = currentX + dx[i];
+                int newY = currentY + dy[i];
+                
+                if (newX >= 0 && newX < columnCount && newY >= 0 && newY < rowCount && !visited[newY, newX] && occupiedMap[newY, newX] == (int)PointValue.UNKNOWN)
+                {
+                    queue.Enqueue((newY, newX));
+                    visited[newY, newX] = true;
+                    occupiedMap[newY, newX] = (int)PointValue.FREE;
+                }
+            }
+        }
+    }
+
+
+
     private void DetectionCollisionPoint(Vector3 pointToCheck)
     {
         float rayMaxDistance = resolution;
@@ -86,7 +186,7 @@ public class OccupiedMapMaker : MonoBehaviour
             Vector3 collisionPoint = hitInfo.point;
             try
             {
-                occupiedMap[Mathf.RoundToInt((MatchToNearest(collisionPoint.z) + offsetY) / resolution ), Mathf.RoundToInt((MatchToNearest(collisionPoint.x) + offsetX) / resolution )] = true;
+                occupiedMap[Mathf.RoundToInt((MatchToNearest(collisionPoint.z) + offsetY) / resolution ), Mathf.RoundToInt((MatchToNearest(collisionPoint.x) + offsetX) / resolution )] = (int)PointValue.OCCUPIED;
             }
             catch
             {
@@ -94,14 +194,12 @@ public class OccupiedMapMaker : MonoBehaviour
                 //I think it's not critial. so just catch 
                 //If you modify the minimum maximum value of the "for" statement in MakeOccupiedMap function, you do not need to use the catch statement
                 //Debug.LogError("index of out ranges");
-                //Debug.LogError(collisionPoint.x + ",  " + collisionPoint.z);
                 //Debug.LogError("z : " + Mathf.RoundToInt((MatchToNearest(collisionPoint.z) + offsetY) / resolution) + ", x: " + Mathf.RoundToInt((MatchToNearest(collisionPoint.x) + offsetX) / resolution));
-                //Debug.LogError(occupiedMap.GetLength(0) + " , " + occupiedMap.GetLength(1));
                     
             }
         }
     }
-    void SaveArrayToTxtFile(bool[,] array)
+    void SaveArrayToTxtFile(int[,] array)
     {
         string txtfileName = filename + ".txt";
         if (Directory.Exists(path))
@@ -112,7 +210,7 @@ public class OccupiedMapMaker : MonoBehaviour
                 {
                     for (int j = 0; j < array.GetLength(1); j++)
                     {
-                        writer.Write(array[i, j] ? "1" : "0");
+                        writer.Write(array[i, j]);
                         writer.Write(" ");
                     }
                     writer.WriteLine();
@@ -127,7 +225,7 @@ public class OccupiedMapMaker : MonoBehaviour
         
     }
    
-    public void SaveAsP5Binary(bool[,] data)
+    public void SaveAsP5Binary(int[,] data)
     {
         if (Directory.Exists(path))
         {
@@ -140,12 +238,12 @@ public class OccupiedMapMaker : MonoBehaviour
             {
                 for (int x = 0; x < data.GetLength(1); x++)
                 {
-                    //반대아닌가?.. 
-                    byte pixelValue = (byte)(data[y, x] == true ? 0 : 254);
+                    //점유된 픽셀 값이 254 아닌가... 왜 반대로 해야 동작하지..
+                    byte pixelValue = (byte)(data[y, x]);
                     imageData.WriteByte(pixelValue);
                 }
             }
-
+            
             // write header, image data to file
             using (FileStream fileStream = new FileStream(path + filename + ".pgm", FileMode.Create))
             {
