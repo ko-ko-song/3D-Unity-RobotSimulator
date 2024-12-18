@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028328, g: 0.22571328, b: 0.3069218, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2451,6 +2451,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34effcfe811ae3149930f116567a9d19, type: 3}
+--- !u!1 &1113906574 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1758286414005427567, guid: a083f8a8f75b69043b09fabed572d7f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1261801126544007276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1155751752
 GameObject:
   m_ObjectHideFlags: 0
@@ -2487,12 +2493,15 @@ MonoBehaviour:
   rear_left_wheel: {fileID: 1965539268}
   rear_right_wheel: {fileID: 2037089082}
   mode: 0
+  topicName: cmd_vel
   maxLinearSpeed: 0.5
   maxRotationalSpeed: 0.3
   wheelRadius: 0.02
   trackWidth: 0.2
   forceLimit: 10
   damping: 10
+  stiffness: 10
+  wheelSeparationMultiplier: 1
   ROSTimeout: 0.5
 --- !u!114 &1155751754
 MonoBehaviour:
@@ -2549,6 +2558,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1219118647 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5216460220986959997, guid: a083f8a8f75b69043b09fabed572d7f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1261801126544007276}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1219118651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1219118647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e40b5051a6de22792f230302ff7465, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wheel_left: {fileID: 1113906574}
+  wheel_right: {fileID: 1922772797}
+  mode: 0
+  maxLinearSpeed: 2
+  maxRotationalSpeed: 1
+  wheelRadius: 0.065
+  trackWidth: 0.37476
+  forceLimit: 1000
+  damping: 100
 --- !u!1 &1241722672
 GameObject:
   m_ObjectHideFlags: 8
@@ -3799,6 +3835,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9090ae501ff9cd459bec5271d40249c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1922772797 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 278062184462190384, guid: a083f8a8f75b69043b09fabed572d7f0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1261801126544007276}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1924628441 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3513890383435784659, guid: 7e8ecfd17cd58c247916864b74797f3f,
@@ -4812,6 +4854,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: husky
       objectReference: {fileID: 0}
+    - target: {fileID: 7697973200830550769, guid: 0eb018f74f1d4ef4c853c6b497c0e45f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4889,10 +4936,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: turtlebot3_manual_config
       objectReference: {fileID: 0}
+    - target: {fileID: 7175616665410456332, guid: a083f8a8f75b69043b09fabed572d7f0,
+        type: 3}
+      propertyPath: k_TfTopic
+      value: tf
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5216460220986959997, guid: a083f8a8f75b69043b09fabed572d7f0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1219118651}
   m_SourcePrefab: {fileID: 100100000, guid: a083f8a8f75b69043b09fabed572d7f0, type: 3}
 --- !u!1 &4858723820851454653 stripped
 GameObject:
@@ -4912,43 +4968,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1089c7a8c4080544a05d7b4e46290bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
-  front_left_wheel: {fileID: 8179201336381087433}
-  front_right_wheel: {fileID: 5402668545902808317}
-  rear_left_wheel: {fileID: 7823767751367499129}
-  rear_right_wheel: {fileID: 6136809327904073394}
-  wheelTrackLength: 0.555
-  wheelRadius: 0.1651
-  maxLinearSpeed: 1
-  maxRotationalSpeed: 1.5
-  trackWidth: 0.555
-  forceLimit: 1000
-  damping: 100
-  stiffness: 10000
-  ROSTimeout: 0.5
-  keyboardLinearSpped: 0.8
-  keyboardRotationSpped: 1.2
---- !u!1 &5402668545902808317 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1191344442994156085, guid: 0eb018f74f1d4ef4c853c6b497c0e45f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1258749269270828513}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6136809327904073394 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5666026473720412866, guid: 0eb018f74f1d4ef4c853c6b497c0e45f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1258749269270828513}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7823767751367499129 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2396424742025484618, guid: 0eb018f74f1d4ef4c853c6b497c0e45f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1258749269270828513}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8179201336381087433 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5535883693899928955, guid: 0eb018f74f1d4ef4c853c6b497c0e45f,
-    type: 3}
-  m_PrefabInstance: {fileID: 1258749269270828513}
-  m_PrefabAsset: {fileID: 0}
